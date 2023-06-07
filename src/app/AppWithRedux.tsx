@@ -68,7 +68,7 @@ const AppWithRedux: React.FC<PropsType> =  ({demo = false}) => {
 
     return (
       // basename={'/reminder-rtk'} нужно, чтобы работали роутинги на gh-pages
-        <BrowserRouter basename={'/reminder-rtk'}>
+        <BrowserRouter basename={'/reminder'}>
         {/*<BrowserRouter basename={'/reminder-rtk'}>*/}
             <div className="App" style={{backgroundColor: '#90a4ae'}}>
                 <ThemeProvider theme={theme}>
