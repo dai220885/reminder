@@ -1,6 +1,6 @@
 {
-  "name": "",
-  "homepage": "https://dai220885.github.io/reminder-rtk",
+  "name": "reminder",
+  "homepage": "https://dai220885.github.io/reminder",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
