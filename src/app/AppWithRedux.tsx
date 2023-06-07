@@ -67,7 +67,9 @@ const AppWithRedux: React.FC<PropsType> =  ({demo = false}) => {
     }
 
     return (
-        <BrowserRouter>
+      // basename={'/reminder-rtk'} нужно, чтобы работали роутинги на gh-pages
+        <BrowserRouter basename={'/reminder-rtk'}>
+        {/*<BrowserRouter basename={'/reminder-rtk'}>*/}
             <div className="App" style={{backgroundColor: '#90a4ae'}}>
                 <ThemeProvider theme={theme}>
                     <AppBar position="static">
@@ -94,7 +96,7 @@ const AppWithRedux: React.FC<PropsType> =  ({demo = false}) => {
                             <Route path = "/login" element = {<Login/>}/>
                             <Route path = "/404" element = {<h1>404: PAGE NOT FOUND</h1>}/>
                             <Route path = "*" element = {<Navigate to={'/404'}/>}/>
-                            <Route path = "/1-todolist" element = {<Navigate to={'/'}/>}/>
+                            {/*<Route path = "/1-todolist" element = {<Navigate to={'/'}/>}/>*/}
                             {/*<Route path='*' element={<h1>404: PAGE NOT FOUND</h1>} />*/}
                         </Routes>
                     </Container>
