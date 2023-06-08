@@ -1,11 +1,11 @@
-import {AnyAction, applyMiddleware, combineReducers, legacy_createStore as createStore} from 'redux';
+import {combineReducers} from 'redux';
+import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import {todoListsReducer, TodoListsReducerActionsType} from '../features/TodoListsList/todoListsReducer';
 import {tasksReducer, TasksReducerActionsType} from '../features/TodoListsList/tasksReducer';
-import thunk, {ThunkAction, ThunkDispatch} from 'redux-thunk';
+import thunk, {ThunkDispatch} from 'redux-thunk';
 import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
 import {appReducer, AppReducerActionsType} from './appReducer';
 import {authReducer} from '../features/Login/authReducer';
-import {configureStore} from '@reduxjs/toolkit';
 //import logger from 'redux-logger'
 
 const rootReducer = combineReducers(
@@ -25,23 +25,29 @@ export const store = configureStore({
     //.concat(logger)
 })
 
+export type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<typeof store.getState>;
+export type AppThunk<ReturnType = void> = ThunkAction<
+  ReturnType,
+  RootState,
+  unknown,
+  Action<string>
+  >;
+
 //создаем кастомный хук useAppDispatch, который будет возвращать стандартный useDispatch from 'react-redux', но протипизированный нашим типом AppDispatchType
-export const useAppDispatch = () => useDispatch<AppDispatchType>()
 
-export const useAppSelector: TypedUseSelectorHook<AppRootStateType> = useSelector
-
-export type AppDispatchType = ThunkDispatch <AppRootStateType, unknown, AppActionsType>
+//export type AppDispatchType = ThunkDispatch <AppRootStateType, unknown, AppActionsType>
 
 //общий тип стейта для всего приложения:
-export type AppRootStateType = ReturnType<typeof rootReducer>
+//export type AppRootStateType = ReturnType<typeof rootReducer>
 //или так: export type AppRootStateType = ReturnType<typeof store.getState>
 
 //общий тим экшенов для всего App, который понадобится для общего типа санки или же чтобы типизировать диспатч в любой санке
-export type AppActionsType = TodoListsReducerActionsType | TasksReducerActionsType | AppReducerActionsType //(AppReducerActionsType можно было не добавлять, т.к. типы экшенов из него мы добавляли в  TasksReducerActionsType и TodoListsReducerActionsType соответственно
+//export type AppActionsType = TodoListsReducerActionsType | TasksReducerActionsType | AppReducerActionsType //(AppReducerActionsType можно было не добавлять, т.к. типы экшенов из него мы добавляли в  TasksReducerActionsType и TodoListsReducerActionsType соответственно
 
 //общий тип санок (на случай, когда нужно в санке задиспатчить другую санку), если это не нужно,
 // можно в санке просто типизировать диспатч: dispatch: Dispatch<ТипЭкшенов>
-export type AppThunkType<ReturnType = void> = ThunkAction<void, AppRootStateType, unknown, AppActionsType>
+// export type AppThunkType<ReturnType = void> = ThunkAction<void, AppRootStateType, unknown, AppActionsType>
 
 
 // @ts-ignore
