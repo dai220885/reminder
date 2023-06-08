@@ -6,11 +6,11 @@ import {ResponseType} from '../api/todoLists-api';
 export const handleServerNetworkError = (dispatch: Dispatch<ErrorUtilsDispatchType>, error: { message: string }) => {
     //debugger
     if (error.message.length) {
-        dispatch(setRequestErrorAC(error.message))
+        dispatch(setRequestErrorAC({error: error.message}))
     } else {
-        dispatch(setRequestErrorAC('Some network error...'))
+        dispatch(setRequestErrorAC({error: 'Some network error...'}))
     }
-    dispatch(setRequestStatusAC('failed'))
+    dispatch(setRequestStatusAC({status: 'failed'}))
 }
 
 
@@ -18,11 +18,11 @@ export const handleServerNetworkError = (dispatch: Dispatch<ErrorUtilsDispatchTy
 export const handleServerAppError = <T> (dispatch: Dispatch<ErrorUtilsDispatchType>, data: ResponseType<T>) => {
     //debugger
     if (data.messages.length) {
-        dispatch(setRequestErrorAC(data.messages[0]))
+        dispatch(setRequestErrorAC({error: data.messages[0]}))
     } else {
-        dispatch(setRequestErrorAC('Some error...'))
+        dispatch(setRequestErrorAC({error: 'Some error...'}))
     }
-    dispatch(setRequestStatusAC('failed'))
+    dispatch(setRequestStatusAC({status: 'failed'}))
 }
 
 type ErrorUtilsDispatchType = SetRequestStatusType | SetRequestErrorType
