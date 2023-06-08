@@ -9,13 +9,13 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import {useFormik} from 'formik';
 import {loginTC} from './authReducer';
-import {AppRootStateType, useAppDispatch} from '../../app/store';
 import {useSelector} from 'react-redux';
 import {Navigate} from 'react-router-dom';
+import {useAppDispatch, useAppSelector} from 'app/hooks';
 
 export const Login = () => {
     const dispatch = useAppDispatch()
-    const isLoggedIn = useSelector<AppRootStateType, boolean> (state =>  state.auth.isLoggedIn)
+    const isLoggedIn = useAppSelector(state =>  state.auth.isLoggedIn)
     const formik = useFormik({
         validate: (values) => {
             if (!values.email) {
