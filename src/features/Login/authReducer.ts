@@ -1,8 +1,10 @@
 import {Dispatch} from 'redux';
-import {SetRequestErrorType, setRequestStatusAC, SetRequestStatusType} from '../../app/appReducer';
-import {authApi, LoginParamsType, ResultCode} from '../../api/todoLists-api';
-import {handleServerAppError, handleServerNetworkError} from '../../utils/error-utils';
+
+
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {authApi, LoginParamsType, ResultCode} from 'api/todoLists-api';
+import {SetRequestErrorType, setRequestStatusAC, SetRequestStatusType} from 'app/appReducer';
+import {handleServerAppError, handleServerNetworkError} from 'utils/error-utils';
 
 //больше не нужна типизация инишл стейта
 const initialState = {
@@ -14,8 +16,8 @@ const slice = createSlice({
     initialState: initialState,
     reducers: {
         //чтобы все написанное ранее продолжало работать, названия свойств (они же его методы) объекта reducers должны совпадать с назвниями соответствующих actionCreators из redux, а логика должна совпадать с логикой соответствующего кейса из редакс редьюсера
-        setIsLoggedInAC (state, action: PayloadAction<{isLoggedIn: boolean}>) {
-            //на самом деле сюда приходит stateDrart, что-то вроде "черновика" стейта, после чего библиотека immer его меняет иммутабельно, несмотря на казалось бы мутабельную запись.
+        setIsLoggedInAC: (state, action: PayloadAction<{isLoggedIn: boolean}>) => {
+            //на самом деле сюда приходит stateDraft, что-то вроде "черновика" стейта, после чего библиотека immer его меняет иммутабельно, несмотря на казалось бы мутабельную запись.
             state.isLoggedIn = action.payload.isLoggedIn
         }
 
@@ -49,12 +51,12 @@ export const {setIsLoggedInAC} = slice.actions
 //thunkCreators:
 export const _loginTC = (data: LoginParamsType) => (dispatch: Dispatch <LoginReducerActionsType>) => {
     //debugger
-    dispatch(setRequestStatusAC('loading'))
+    dispatch(setRequestStatusAC({status: 'loading'}))
     authApi.login(data)
         .then((res) => {
             if (res.data.resultCode === ResultCode.OK) {
                 dispatch(setIsLoggedInAC({isLoggedIn: true}))
-                dispatch(setRequestStatusAC('succeeded'))
+                dispatch(setRequestStatusAC({status: 'succeeded'}))
             } else {
                 handleServerAppError(dispatch, res.data)
             }
@@ -66,12 +68,12 @@ export const _loginTC = (data: LoginParamsType) => (dispatch: Dispatch <LoginRed
 //то же самое, но с использованием async await
 export const loginTC = (data: LoginParamsType) => async (dispatch: Dispatch <LoginReducerActionsType>) => {
     //debugger
-    dispatch(setRequestStatusAC('loading'))
+    dispatch(setRequestStatusAC({status: 'loading'}))
     try {
         const res = await authApi.login(data)
         if (res.data.resultCode === ResultCode.OK) {
             dispatch(setIsLoggedInAC({isLoggedIn: true}))
-            dispatch(setRequestStatusAC('succeeded'))
+            dispatch(setRequestStatusAC({status: 'succeeded'}))
         } else {
             handleServerAppError(dispatch, res.data)
         }
@@ -85,13 +87,13 @@ export const loginTC = (data: LoginParamsType) => async (dispatch: Dispatch <Log
 
 export const logoutTC = () => (dispatch: Dispatch <LoginReducerActionsType>) => {
     //debugger
-    dispatch(setRequestStatusAC('loading'))
+    dispatch(setRequestStatusAC({status: 'loading'}))
     authApi.logout()
         .then((res) => {
             if (res.data.resultCode === ResultCode.OK) {
                 //alert('success')
                 dispatch(setIsLoggedInAC({isLoggedIn: false}))
-                dispatch(setRequestStatusAC('succeeded'))
+                dispatch(setRequestStatusAC({status: 'succeeded'}))
             } else {
                 handleServerAppError(dispatch, res.data)
             }
