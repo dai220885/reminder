@@ -8,15 +8,17 @@ import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/icons-material/Menu';
-import {TodoListsList} from '../features/TodoListsList/TodoListsList';
 import {CircularProgress, LinearProgress} from '@mui/material';
-import {ErrorSnackbar} from '../components/ErrorSnackbar/ErrorSnackbar';
+
 import {useSelector} from 'react-redux';
 import {initializeAppTC, RequestStatusType} from './appReducer';
-import {AppRootStateType, useAppDispatch} from './store';
+//import {AppRootStateType} from './store';
 import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom';
-import {Login} from '../features/Login/Login';
-import {logoutTC} from '../features/Login/authReducer';
+import {useAppDispatch, useAppSelector} from 'app/hooks';
+import {logoutTC} from 'features/Login/authReducer';
+import {Login} from 'features/Login/Login';
+import {ErrorSnackbar} from 'components/ErrorSnackbar/ErrorSnackbar';
+import {TodoListsList} from 'features/TodoListsList/TodoListsList';
 
 //import { createTheme } from '@material-ui/core/styles';
 
@@ -44,9 +46,11 @@ const AppWithRedux: React.FC<PropsType> =  ({demo = false}) => {
     //UI
     //console.log(tasks)
     const dispatch = useAppDispatch();
-    const status = useSelector<AppRootStateType, RequestStatusType>((state) =>state.app.status)
-    const isInitialized = useSelector<AppRootStateType, boolean>((state) =>state.app.isInitialized)
-    const isLoggedIn = useSelector<AppRootStateType, boolean> (state =>  state.auth.isLoggedIn)
+    //const status = useSelector<AppRootStateType, RequestStatusType>((state) =>state.app.status)
+    const status = useAppSelector((state) =>state.app.status)
+
+    const isInitialized = useAppSelector((state) =>state.app.isInitialized)
+    const isLoggedIn = useAppSelector(state =>  state.auth.isLoggedIn)
 
     useEffect( () =>{
         dispatch(initializeAppTC())
