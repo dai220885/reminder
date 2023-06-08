@@ -1,21 +1,21 @@
 import React, {useCallback, useEffect} from 'react';
-import TaskList from './TaskList/TaskList';
-import {AddItemInput} from '../../../components/AddItemInput/AddItemInput';
-import {EditableSpan} from '../../../components/EditableSpan/EditableSpan';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Delete from '@mui/icons-material/Delete';
-import {FilterValuesType, TodoListType} from '../todoListsReducer';
-import {TaskFromServerType, TaskStatuses} from '../../../api/todoLists-api';
-import {useAppDispatch} from '../../../app/store';
+
+
+
 import {fetchTasksTC} from '../tasksReducer';
+import {FilterValuesType, TodoListType} from 'features/TodoListsList/todoListsReducer';
+import {TaskFromServerType, TaskStatuses} from 'api/todoLists-api';
+import {useAppDispatch} from 'app/hooks';
+import {EditableSpan} from 'components/EditableSpan/EditableSpan';
+import {AddItemInput} from 'components/AddItemInput/AddItemInput';
+import TaskList from 'features/TodoListsList/TodoList/TaskList/TaskList';
 //import {TaskType} from '../reducers/tasksReducer';
 
 type TodoListPropsType = {
     todoList: TodoListType
-    //todoListId: string
-    //title: string
-    //filter: FilterValuesType
     tasks: TaskFromServerType[]
     changeFilterValue: (todoListId: string, filter: FilterValuesType) => void
     removeTask: (todoListId: string, taskId: string) => void
