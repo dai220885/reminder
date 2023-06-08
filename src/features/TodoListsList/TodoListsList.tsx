@@ -1,21 +1,18 @@
 import React, {useCallback, useEffect} from 'react';
-import {AppRootStateType, useAppDispatch} from '../../app/store';
-import {useSelector} from 'react-redux';
-import {
-    addTodoListTC, changeTodoListFilterAC,
-    changeTodoListTitleTC,
-    FilterValuesType,
-    getTodoListsTC,
-    removeTodoListTC,
-    TodoListType
-} from './todoListsReducer';
-import {addTaskTC, changeTaskStatusTC, changeTaskTitleTC, removeTaskTC, TasksForTodoListType} from './tasksReducer';
-import {TaskStatuses} from '../../api/todoLists-api';
 import Grid from '@mui/material/Grid';
-import {AddItemInput} from '../../components/AddItemInput/AddItemInput';
 import Paper from '@mui/material/Paper';
 import TodoList from './TodoList/TodoList';
 import {Navigate} from 'react-router-dom';
+import {useAppDispatch, useAppSelector} from 'app/hooks';
+import {AddItemInput} from 'components/AddItemInput/AddItemInput'
+import {
+    addTodoListTC, changeTodoListFilterAC,
+    changeTodoListTitleTC, FilterValuesType,
+    getTodoListsTC,
+    removeTodoListTC
+} from 'features/TodoListsList/todoListsReducer';
+import {addTaskTC, changeTaskStatusTC, changeTaskTitleTC, removeTaskTC} from 'features/TodoListsList/tasksReducer';
+import {TaskStatuses} from 'api/todoLists-api';
 
 type TodoListsListPropsType = {
     demo?: boolean // нужно только для сторибука, чтобы устанавливать "демо режим", а не запрашивать тудулисты с сервера.
@@ -30,9 +27,9 @@ export const TodoListsList: React.FC<TodoListsListPropsType> = ({demo = false}) 
     //const dispatch = useDispatch<AppDispatchType>(); // можно было так протипизировать
     const dispatch = useAppDispatch(); // а можно использовать наш диспатч, который мы также типизировали
     //с помощью useSelector обращаемся к стейту и достаем из него то, что нам нужно
-    const todoLists = useSelector<AppRootStateType, TodoListType[]>(state => state.todoLists)
-    const tasks = useSelector<AppRootStateType, TasksForTodoListType>(state => state.tasks)
-    const isLoggedIn =  useSelector<AppRootStateType, boolean>(state => state.auth.isLoggedIn)
+    const todoLists = useAppSelector(state => state.todoLists)
+    const tasks = useAppSelector(state => state.tasks)
+    const isLoggedIn =  useAppSelector(state => state.auth.isLoggedIn)
     useEffect(() => {
         if(demo || !isLoggedIn) {
             return
@@ -73,7 +70,7 @@ export const TodoListsList: React.FC<TodoListsListPropsType> = ({demo = false}) 
     }, [dispatch]) //+
 
     const changeFilterValue = useCallback((todoListForChangeId: string, newFilterValue: FilterValuesType) => {
-        dispatch(changeTodoListFilterAC(todoListForChangeId, newFilterValue))
+        dispatch(changeTodoListFilterAC({todoListForChangeId: todoListForChangeId, newFilterValue: newFilterValue}))
     }, [dispatch]) //+
 
     if (!isLoggedIn) {
