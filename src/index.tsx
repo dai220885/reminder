@@ -4,15 +4,18 @@ import './index.css';
 import AppWithRedux from './app/AppWithRedux';
 import {Provider} from 'react-redux';
 import {store} from './app/store';
+import {BrowserRouter} from 'react-router-dom';
 
 
 const root = ReactDOM.createRoot(
-    document.getElementById('root') as HTMLElement
+	document.getElementById('root') as HTMLElement
 );
 root.render(
-    <Provider store={store}>
-        <AppWithRedux/>
-    </Provider>
+	<Provider store={store}>
+		<BrowserRouter basename={'/reminder'}>
+			<AppWithRedux/>
+		</BrowserRouter>
+	</Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function
