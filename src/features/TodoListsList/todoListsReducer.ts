@@ -12,7 +12,8 @@ import {
 } from '../../app/appReducer';
 import {handleServerAppError, handleServerNetworkError} from '../../utils/error-utils';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {AppThunk} from 'app/store';
+import {AppThunk} from '../../app/store';
+
 
 const initialState: TodoListType[] = [
 	// {id: todoListId1, title: 'What to learn', filter: 'all'},

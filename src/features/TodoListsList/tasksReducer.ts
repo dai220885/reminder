@@ -11,12 +11,12 @@ import {
 	TaskStatuses, TodoListFromServerType,
 	todoListsApi,
 	UpdateTaskModelType
-} from 'api/todoLists-api';
+} from '../../api/todoLists-api';
 import {Dispatch} from 'redux';
-import {setRequestErrorAC, SetRequestErrorType, setRequestStatusAC, SetRequestStatusType} from 'app/appReducer';
-import {handleServerAppError, handleServerNetworkError} from 'utils/error-utils';
+import {setRequestErrorAC, SetRequestErrorType, setRequestStatusAC, SetRequestStatusType} from '../../app/appReducer';
+import {handleServerAppError, handleServerNetworkError} from '../../utils/error-utils';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {RootState} from 'app/store';
+import {RootState} from '../../app/store';
 
 // export type OldTaskType = {
 //     id: string;
@@ -44,6 +44,7 @@ const slice = createSlice({
 		},
 		removeTaskAC: (state, action: PayloadAction<{ todoListId: string, taskForRemoveId: string }>) => {
 			const tasks = state[action.payload.todoListId]
+
 			const index = tasks.findIndex(t => t.id === action.payload.taskForRemoveId)
 			if (index > -1) {
 				//state[action.payload.todoListId].splice(index, 1)
@@ -99,6 +100,8 @@ const slice = createSlice({
 
 
 export const tasksReducer = slice.reducer
+
+//actions
 export const {
 	addTaskAC,
 	removeTaskAC,

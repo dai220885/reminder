@@ -2,9 +2,9 @@ import {Dispatch} from 'redux';
 
 
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {authApi, LoginParamsType, ResultCode} from 'api/todoLists-api';
-import {SetRequestErrorType, setRequestStatusAC, SetRequestStatusType} from 'app/appReducer';
-import {handleServerAppError, handleServerNetworkError} from 'utils/error-utils';
+import {authApi, LoginParamsType, ResultCode} from '../../api/todoLists-api';
+import {SetRequestErrorType, setRequestStatusAC, SetRequestStatusType} from '../../app/appReducer';
+import {handleServerAppError, handleServerNetworkError} from '../../utils/error-utils';
 
 //больше не нужна типизация инишл стейта
 const initialState = {

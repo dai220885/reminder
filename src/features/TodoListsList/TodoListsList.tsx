@@ -3,16 +3,16 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import TodoList from './TodoList/TodoList';
 import {Navigate} from 'react-router-dom';
-import {useAppDispatch, useAppSelector} from 'app/hooks';
-import {AddItemInput} from 'components/AddItemInput/AddItemInput'
+import {useAppDispatch, useAppSelector} from '../../app/hooks';
+import {AddItemInput} from '../../components/AddItemInput/AddItemInput'
 import {
     addTodoListTC, changeTodoListFilterAC,
     changeTodoListTitleTC, FilterValuesType,
     getTodoListsTC,
     removeTodoListTC
-} from 'features/TodoListsList/todoListsReducer';
-import {addTaskTC, changeTaskStatusTC, changeTaskTitleTC, removeTaskTC} from 'features/TodoListsList/tasksReducer';
-import {TaskStatuses} from 'api/todoLists-api';
+} from '../../features/TodoListsList/todoListsReducer';
+import {addTaskTC, changeTaskStatusTC, changeTaskTitleTC, removeTaskTC} from '../../features/TodoListsList/tasksReducer';
+import {TaskStatuses} from '../../api/todoLists-api';
 
 type TodoListsListPropsType = {
     demo?: boolean // нужно только для сторибука, чтобы устанавливать "демо режим", а не запрашивать тудулисты с сервера.

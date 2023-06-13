@@ -11,7 +11,7 @@ import {useFormik} from 'formik';
 import {loginTC} from './authReducer';
 import {useSelector} from 'react-redux';
 import {Navigate} from 'react-router-dom';
-import {useAppDispatch, useAppSelector} from 'app/hooks';
+import {useAppDispatch, useAppSelector} from '../../app/hooks';
 
 export const Login = () => {
     const dispatch = useAppDispatch()

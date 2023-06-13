@@ -6,12 +6,12 @@ import Delete from '@mui/icons-material/Delete';
 
 
 import {fetchTasksTC} from '../tasksReducer';
-import {FilterValuesType, TodoListType} from 'features/TodoListsList/todoListsReducer';
-import {TaskFromServerType, TaskStatuses} from 'api/todoLists-api';
-import {useAppDispatch} from 'app/hooks';
-import {EditableSpan} from 'components/EditableSpan/EditableSpan';
-import {AddItemInput} from 'components/AddItemInput/AddItemInput';
-import TaskList from 'features/TodoListsList/TodoList/TaskList/TaskList';
+import {FilterValuesType, TodoListType} from '../../../features/TodoListsList/todoListsReducer';
+import {TaskFromServerType, TaskStatuses} from '../../../api/todoLists-api';
+import {useAppDispatch} from '../../../app/hooks';
+import {EditableSpan} from '../../../components/EditableSpan/EditableSpan';
+import {AddItemInput} from '../../../components/AddItemInput/AddItemInput';
+import TaskList from '../../../features/TodoListsList/TodoList/TaskList/TaskList';
 //import {TaskType} from '../reducers/tasksReducer';
 
 type TodoListPropsType = {
