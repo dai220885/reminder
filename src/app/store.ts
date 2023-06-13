@@ -25,14 +25,22 @@ export const store = configureStore({
     //.concat(logger)
 })
 
+
+//types
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
+
 export type AppThunk<ReturnType = void> = ThunkAction<
   ReturnType,
   RootState,
   unknown,
   Action<string>
   >;
+export type RootReducerType = typeof rootReducer //этот тип нужен для ReduxStoreProviderDecorator
+//варианты типизации стейта приложения
+//export type RootState = ReturnType<typeof rootReducer>;
+//export type RootState = ReturnType<RootReducerType>;
+
 
 //создаем кастомный хук useAppDispatch, который будет возвращать стандартный useDispatch from 'react-redux', но протипизированный нашим типом AppDispatchType
 
