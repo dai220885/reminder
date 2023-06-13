@@ -1,7 +1,8 @@
 import React from 'react';
 import {Meta, StoryObj} from '@storybook/react';
 import AppWithRedux from './AppWithRedux';
-import {ReduxStoreProviderDecorator} from '../ReduxStoreProviderDecorator';
+import {BrowserRouterDecorator, ReduxStoreProviderDecorator} from '../ReduxStoreProviderDecorator';
+import StoryRouter from 'storybook-react-router'
 
 // type Story = StoryObj<typeof AddItemForm>;
 //
@@ -20,7 +21,7 @@ const meta: Meta<typeof AppWithRedux> = {
     title: 'TODOLISTS/AppWithRedux',
     component: AppWithRedux,
     tags: ['autodocs'],
-    decorators: [ReduxStoreProviderDecorator]
+    decorators: [ReduxStoreProviderDecorator, BrowserRouterDecorator]
 
 };
 
