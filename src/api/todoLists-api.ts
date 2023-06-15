@@ -74,10 +74,14 @@ export type TodoListFromServerType = {
     addedDate: string,
     order: number
 }
+
+
+export type FieldErrorType = { field: string, error: string };
 export type ResponseType<D={}> = { //если параметр D не передавать, н он по умолчанию будет пустым объектом
     resultCode: number
     messages: Array<string>
-    fieldsErrors: Array<string>
+    //fieldsErrors: Array<string>
+    fieldsErrors: Array<FieldErrorType>
     data: D
 }
 export enum TaskStatuses {
