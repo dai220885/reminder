@@ -17,6 +17,7 @@ import {setRequestErrorAC, SetRequestErrorType, setRequestStatusAC, SetRequestSt
 import {handleServerAppError, handleServerNetworkError} from '../../utils/error-utils';
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {RootState} from '../../app/store';
+import { isAxiosError } from 'axios';
 
 const initialState: TasksForTodoListType = {
 	// [todoListId1]: [
@@ -31,65 +32,48 @@ const initialState: TasksForTodoListType = {
 
 //TODO убрать из санок приписку TC
 
-// export const _fetchTasksTC = (todoListId: string) => (dispatch: Dispatch) => {
-// 	dispatch(setRequestStatusAC({status: 'loading'}))
-// 	todoListsApi.getTasks(todoListId)
-// 		.then((res) => {
-// 			dispatch(setTasksAC({todoListId, tasks: res.data.items}))
-// 			dispatch(setRequestStatusAC({status: 'succeeded'}))
-// 		}).catch((e) => {
-// 		handleServerNetworkError(dispatch, e)
-// 	})
-// }
-
 //если санка принимала несколько параметров, то их нужно оборачивать в объект, если же нужен только один параметр, то можно без оборачвания
 
 //thunks
 export const fetchTasksTC = createAsyncThunk (
 	'tasks/fetchTasks',
-	(todoListId: string, thunkAPI) => {
-		const {dispatch} = thunkAPI
+	async (todoListId: string, thunkAPI) => {
+		const {dispatch, rejectWithValue} = thunkAPI
 		dispatch(setRequestStatusAC({status: 'loading'}))
-		return todoListsApi.getTasks(todoListId)
-			.then((res) => {
+			try {
+				const res = await todoListsApi.getTasks(todoListId)
 				const tasks = res.data.items
 				dispatch(setRequestStatusAC({status: 'succeeded'}))
 				return {todoListId, tasks}
 				//можно не создавать промежуточную переменную tasks:
 				//return {todoListId, tasks: res.data.items}
-			})
-			.catch((e) => {handleServerNetworkError(dispatch, e)})
+			}
+			catch (e){
+			let errorMessage = ''
+				if (isAxiosError(e)) {
+					errorMessage = e?.response?.data?.error ?? e.message
+				} else if (e instanceof Error) {
+					errorMessage = e.message
+				} else {errorMessage = JSON.stringify(e)}
+				handleServerNetworkError(dispatch, {message: errorMessage})
+				return rejectWithValue (errorMessage)
+			}
+
+
 	}
 )
 
-// export const _removeTaskTC = (todoListId: string, taskForRemoveId: string) => (dispatch: Dispatch<TasksReducerActionsType>) => {
-// 	dispatch(setRequestStatusAC({status: 'loading'}))
-// 	todoListsApi.deleteTask(todoListId, taskForRemoveId)
-// 		.then((res) => {
-// 			if (res.data.resultCode === ResultCode.OK) {
-// 				dispatch(removeTaskAC({todoListId, taskForRemoveId}))
-// 				dispatch(setRequestStatusAC({status: 'succeeded'}))
-// 			} else {
-// 				handleServerAppError(dispatch, res.data)
-// 			}
-// 		}).catch((e) => {
-// 		handleServerNetworkError(dispatch, e)
-// 	})
-// }
-
 //TODO пофиксить то, что убрали if else(убрали т.к. в addCase в экстраРедьюсере падала ошибка, что action.payload может быть undefined
-export const removeTaskTC = createAsyncThunk('tasks/removeTask', (arg: {todoListId: string, taskForRemoveId: string}, thunkAPI) => {
+export const removeTaskTC = createAsyncThunk('tasks/removeTask', async (arg: {todoListId: string, taskForRemoveId: string}, thunkAPI) => {
 	const {dispatch} = thunkAPI
 	dispatch(setRequestStatusAC({status: 'loading'}))
-	return todoListsApi.deleteTask(arg.todoListId, arg.taskForRemoveId)
-		.then((res) => {
+	const res = await todoListsApi.deleteTask(arg.todoListId, arg.taskForRemoveId)
 			if (res.data.resultCode === ResultCode.OK) {
 				dispatch(setRequestStatusAC({status: 'succeeded'}))
 				return {todoListId: arg.todoListId, taskForRemoveId: arg.taskForRemoveId}
 			} else {
 				handleServerAppError(dispatch, res.data)
 			}
-		})
 })
 
 const slice = createSlice({
@@ -99,14 +83,6 @@ const slice = createSlice({
 		addTaskAC: (state, action: PayloadAction<{ todoListId: string, task: TaskFromServerType }>) => {
 			state[action.payload.todoListId].unshift(action.payload.task)
 		},
-		// removeTaskAC: (state, action: PayloadAction<{ todoListId: string, taskForRemoveId: string }>) => {
-		// 	const tasks = state[action.payload.todoListId]
-		// 	const index = tasks.findIndex(t => t.id === action.payload.taskForRemoveId)
-		// 	if (index > -1) {
-		// 		//state[action.payload.todoListId].splice(index, 1)
-		// 		tasks.splice(index, 1)
-		// 	}
-		// },
 		changeTaskStatusAC: (state, action: PayloadAction<{ todoListId: string, taskForChangeId: string, newStatus: number }>) => {
 			const tasks = state[action.payload.todoListId]
 			const index = tasks.findIndex(t => t.id === action.payload.taskForChangeId)
@@ -123,9 +99,6 @@ const slice = createSlice({
 				tasks[index].title = action.payload.newTitle
 			}
 		},
-		// setTasksAC: (state, action: PayloadAction<{ todoListId: string, tasks: TaskFromServerType[] }>) => {
-		// 	state[action.payload.todoListId] = action.payload.tasks
-		// },
 	},
 	//extraReducers может быть как объект со свойствами (ключ-значение), а может быть функция, которая будет "собирать" экстра редьюсеры
 	extraReducers: (builder) => {
