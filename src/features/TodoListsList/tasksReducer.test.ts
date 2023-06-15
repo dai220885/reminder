@@ -1,9 +1,9 @@
 import {TaskPriorities, TaskStatuses} from '../../api/todoLists-api';
 import {
     addTaskAC, changeTaskStatusAC,
-    changeTaskTitleAC,
-    removeTaskAC,
-    setTasksAC,
+    changeTaskTitleAC, fetchTasksTC, removeTaskTC,
+    //removeTaskAC,
+    //setTasksAC,
     TasksForTodoListType,
     tasksReducer
 } from '../../features/TodoListsList/tasksReducer'
@@ -35,8 +35,10 @@ beforeEach(() => {
 });
 
 test('correct task should be deleted from correct array', () => {
-    const action = removeTaskAC({todoListId: "todolistId2", taskForRemoveId: "2"});
-
+    //получим action из экшенкриэйтора
+    //const action = removeTaskAC({todoListId: "todolistId2", taskForRemoveId: "2"});
+    //чтобы получить action из санки (отдельно экшенкриэйтор мы уже не описываем), достаем его из свойства fulfilled, после чего в качестве параметров передаем объект, который сама санка возвращает при успешно запросе, далее какие-то args в виде пустой строки (или значения для requestId - нужно только для тестов, в приложении туда всё автоматом прилетает) и то, что сама санка получает в качестве параметра - в нашем случае todoListId
+    const action = removeTaskTC.fulfilled({todoListId: "todolistId2", taskForRemoveId: "2"}, 'requestId', {todoListId: "todolistId2", taskForRemoveId: "2"});
     const endState = tasksReducer(startState, action)
 
     expect(endState["todolistId1"].length).toBe(3);
@@ -113,7 +115,6 @@ test('propertry with todolistId should be deleted', () => {
     expect(keys.length).toBe(1);
     expect(endState["todolistId2"]).not.toBeDefined();
 });
-
 test('empty arrays should be added when we set todolists', () => {
     const action = setTodoListsAC({todoLists: [
         {id: "1", title: "title 1", order: 0, addedDate: ""},
@@ -129,7 +130,10 @@ test('empty arrays should be added when we set todolists', () => {
     expect(endState['2']).toBeDefined()
 })
 test('tasks should be added for todolist', () => {
-    const action = setTasksAC({todoListId: 'todolistId1',tasks: startState['todolistId1']});
+    //получим action из экшенкриэйтора
+    //const action = setTasksAC({todoListId: 'todolistId1',tasks: startState['todolistId1']});
+    //чтобы получить action из санки (отдельно экшенкриэйтор мы уже не описываем), достаем его из свойства fulfilled, после чего в качестве параметров передаем объект, который сама санка возвращает при успешно запросе, далее какие-то args в виде пустой строки (или значения для requestId - нужно только для тестов, в приложении туда всё автоматом прилетает) и то, что сама санка получает в качестве параметра - в нашем случае todoListId
+    const action = fetchTasksTC.fulfilled({todoListId: 'todolistId1',tasks: startState['todolistId1']}, 'requestId', 'todolistId1' );
 
     const endState = tasksReducer({
         "todolistId2": [],
