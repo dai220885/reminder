@@ -7,12 +7,18 @@ import FormGroup from '@mui/material/FormGroup';
 import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import {useFormik} from 'formik';
+import {FormikHelpers, useFormik} from 'formik';
 import {loginTC} from './authReducer';
 import {useSelector} from 'react-redux';
 import {Navigate} from 'react-router-dom';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 
+
+type FormValuesType = {
+    email: string,
+    password: string,
+    rememberMe: boolean,
+}
 export const Login = () => {
     const dispatch = useAppDispatch()
     const isLoggedIn = useAppSelector(state =>  state.auth.isLoggedIn)
@@ -25,11 +31,13 @@ export const Login = () => {
                 return {
                     email: 'email is required'
                 }
-            } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-                return {
-                    email: 'Invalid email address'
-                }
             }
+            //проверка валидности имейла
+            // else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+            //     return {
+            //         email: 'Invalid email address'
+            //     }
+            // }
             if (!values.password) {
                 return {
                     password: 'password is required'
@@ -42,10 +50,17 @@ export const Login = () => {
             password: '',
             rememberMe: false
         },
-        onSubmit: values => {
-            //alert(JSON.stringify(values));
-            //debugger
-            dispatch(loginTC(values));
+        onSubmit: async (values, formikHelpers :FormikHelpers<FormValuesType>) => {
+            const action = await dispatch(loginTC({loginParams: values}));
+            if (loginTC.rejected.match(action)) {
+                if (action.payload?.fieldsErrors?.length) {
+                    const error = action.payload?.fieldsErrors[0]
+                    formikHelpers.setFieldError (error.field, error.error)
+                }
+            }
+
+            //formikHelpers.setFieldError ('email', 'testEmailError')
+            //formikHelpers.setFieldError ('password', 'testPasswordError')
             //можно зачистить поля ввода:
             //formik.resetForm();
         },
