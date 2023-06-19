@@ -124,6 +124,15 @@ export type UpdateTaskModelType = {
     deadline: string | null
 }
 
+export type UpdateDomainTaskModelType = {
+    title?: string
+    description?: string
+    status?: TaskStatuses
+    priority?: TaskPriorities
+    startDate?: string
+    deadline?: string
+}
+
 //уже не используем, вместо них ResponseType<D>
 type CreateTodolistResponseType = {
     resultCode: number
