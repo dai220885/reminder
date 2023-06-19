@@ -1,12 +1,21 @@
-//app-reducer.tsx
-import {Dispatch} from 'redux';
 import {authApi, ResultCode} from '../api/todoLists-api';
 import {setIsLoggedInAC, setIsLoggedInActionType} from '../features/Login/authReducer';
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {action} from '@storybook/addon-actions';
+import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
-export type RequestErrorType = null | string
+//TODO ?? добавить try-catch
+export const initializeAppTC = createAsyncThunk('app/initializeApp',
+	async (arg, thunkAPI) => {
+		const {dispatch, rejectWithValue} = thunkAPI
+		const res = await authApi.me()
+		if (res.data.resultCode === ResultCode.OK) {
+			dispatch(setIsLoggedInAC({isLoggedIn: true}))
+		} else {
+
+		}
+		//dispatch(setAppIsInitializedAC({isInitialized: true}))
+		//ничего не ретурним в случае успеха, а в кейсе extraReducers просто меняем стейт: state.isInitialized = true
+		//можно даже явно не писать return, т.к. в случае успешной инициализации не сработает ветка else в блоке try и не отработает catch, в любом случае вернется промис зарезолвится значением undefined
+	})
 
 const initialState = {
 	//статус показывает наличие обращения к серверу
@@ -18,26 +27,30 @@ const initialState = {
 }
 
 const slice = createSlice({
-	name: 'app',
-	initialState: initialState,
-	reducers: {
-		setRequestStatusAC: (state, action: PayloadAction<{ status: RequestStatusType }>) => {
-			state.status = action.payload.status
+		name: 'app',
+		initialState,
+		reducers: {
+			setRequestStatusAC: (state, action: PayloadAction<{ status: RequestStatusType }>) => {
+				state.status = action.payload.status
+			},
+			setRequestErrorAC: (state, action: PayloadAction<{ error: RequestErrorType }>) => {
+				state.error = action.payload.error
+			},
+			// setAppIsInitializedAC: (state, action: PayloadAction<{ isInitialized: boolean }>) => {
+			// 	state.isInitialized = action.payload.isInitialized
+			// }
 		},
-		setRequestErrorAC: (state, action: PayloadAction<{ error: RequestErrorType }>) => {
-			state.error = action.payload.error
-		},
-		setAppIsInitializedAC: (state, action: PayloadAction<{isInitialized: boolean}>) => {
-			state.isInitialized = action.payload.isInitialized
-		}
+		extraReducers: builder => {
+			builder
+				.addCase(initializeAppTC.fulfilled, (state, action) => {
+					state.isInitialized = true
+				})
 		}
 	}
 )
 
 export const appReducer = slice.reducer
-export const {setRequestStatusAC, setRequestErrorAC, setAppIsInitializedAC} = slice.actions
-
-export type InitialStateType = typeof initialState
+export const {setRequestStatusAC, setRequestErrorAC} = slice.actions
 
 // export const _appReducer = (state: InitialStateType = initialState, action: AppReducerActionsType): InitialStateType => {
 // 	switch (action.type) {
@@ -61,25 +74,26 @@ export type InitialStateType = typeof initialState
 // } as const)
 
 //thunks
-export const initializeAppTC = () => (dispatch: Dispatch<AppReducerActionsType>) => {
-	authApi.me().then(res => {
-		if (res.data.resultCode === ResultCode.OK) {
-			dispatch(setIsLoggedInAC({isLoggedIn: true}))
-		} else {
-
-		}
-		dispatch(setAppIsInitializedAC({isInitialized: true}))
-	})
-}
-
+// export const initializeAppTC = () => (dispatch: Dispatch<AppReducerActionsType>) => {
+// 	authApi.me().then(res => {
+// 		if (res.data.resultCode === ResultCode.OK) {
+// 			dispatch(setIsLoggedInAC({isLoggedIn: true}))
+// 		} else {
+//
+// 		}
+// 		dispatch(setAppIsInitializedAC({isInitialized: true}))
+// 	})
+// }
 
 //types:
+export type InitialStateType = typeof initialState
+export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
+export type RequestErrorType = null | string
 export type SetRequestErrorType = ReturnType<typeof setRequestErrorAC>
 export type SetRequestStatusType = ReturnType<typeof setRequestStatusAC>
-export type SetAppIsInitializedType = ReturnType<typeof setAppIsInitializedAC>
-
+//export type SetAppIsInitializedType = ReturnType<typeof setAppIsInitializedAC>
 export type AppReducerActionsType =
 	| SetRequestStatusType
 	| SetRequestErrorType
-	| SetAppIsInitializedType
+	//| SetAppIsInitializedType
 	| setIsLoggedInActionType
