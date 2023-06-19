@@ -11,7 +11,11 @@ import {
     getTodoListsTC,
     removeTodoListTC
 } from '../../features/TodoListsList/todoListsReducer';
-import {addTaskTC, changeTaskStatusTC, changeTaskTitleTC, removeTaskTC} from '../../features/TodoListsList/tasksReducer';
+import {
+    addTaskTC,
+    removeTaskTC,
+    updateTaskTC
+} from '../../features/TodoListsList/tasksReducer';
 import {TaskStatuses} from '../../api/todoLists-api';
 
 type TodoListsListPropsType = {
@@ -54,19 +58,19 @@ export const TodoListsList: React.FC<TodoListsListPropsType> = ({demo = false}) 
     }, [dispatch])
 
     const addTask = useCallback((todoListId: string, newTaskTitle: string) => {
-        dispatch(addTaskTC(todoListId, newTaskTitle))
+        dispatch(addTaskTC({todoListId, title: newTaskTitle}))
     }, [dispatch])//+
 
     const removeTask = useCallback((todoListId: string, taskForRemoveId: string) => {
         dispatch(removeTaskTC({todoListId, taskForRemoveId}))
     }, [dispatch]) //+
 
-    const changeTaskStatus = useCallback((todoListId: string, taskForChangeID: string, newStatus: TaskStatuses) => {
-        dispatch(changeTaskStatusTC(todoListId, taskForChangeID, newStatus))
+    const changeTaskStatus = useCallback((todoListId: string, taskForUpdateId: string, newStatus: TaskStatuses) => {
+        dispatch(updateTaskTC({todoListId, taskForUpdateId, model: {status: newStatus}}))
     }, [dispatch]) //+
 
-    const changeTaskTitle = useCallback((todoListId: string, taskForChangeId: string, newTitle: string) => {
-        dispatch(changeTaskTitleTC(todoListId, taskForChangeId, newTitle))
+    const changeTaskTitle = useCallback((todoListId: string, taskForUpdateId: string, newTitle: string) => {
+        dispatch(updateTaskTC({todoListId, taskForUpdateId, model: {title: newTitle}}))
     }, [dispatch]) //+
 
     const changeFilterValue = useCallback((todoListForChangeId: string, newFilterValue: FilterValuesType) => {
