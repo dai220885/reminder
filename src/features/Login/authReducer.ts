@@ -9,17 +9,17 @@ import {isAxiosError} from 'axios';
 
 //Для уточнения типа createAsyncThunk в дженерике указываем: что санка возвращает, что санка принимает, что получается, при ошибке
 export const loginTC = createAsyncThunk<
-	{isLoggedIn: boolean},
+	undefined,
 	{ loginParams: LoginParamsType },
-	{rejectValue: {errors: string[], fieldsErrors?: FieldErrorType[]}}>('auth/login', async (arg: { loginParams: LoginParamsType }, thunkAPI) => {
+	{ rejectValue: { errors: string[], fieldsErrors?: FieldErrorType[] } }>('auth/login', async (arg: { loginParams: LoginParamsType }, thunkAPI) => {
 	const {dispatch, rejectWithValue} = thunkAPI
 	dispatch(setRequestStatusAC({status: 'loading'}))
 	try {
 		const res = await authApi.login(arg.loginParams)
 		if (res.data.resultCode === ResultCode.OK) {
 			dispatch(setRequestStatusAC({status: 'succeeded'}))
-			//dispatch(setIsLoggedInAC({isLoggedIn: true}))
-			return {isLoggedIn: true}
+			//ничего не ретурним в случае успеха, а в кейсе extraReducers просто меняем стейт: state.isLoggedIn = true
+			return //можно даже явно не писать return, т.к. в случае успешной логинизации не сработает ветка else в блоке try и не отработает catch, в любом случае вернется undefined
 		} else {
 			handleServerAppError(dispatch, res.data)
 			//return {isLoggedIn: false}
@@ -32,12 +32,41 @@ export const loginTC = createAsyncThunk<
 			errorMessage = e?.response?.data?.error ?? e.message
 		} else if (e instanceof Error) {
 			errorMessage = e.message
-		} else {errorMessage = JSON.stringify(e)}
+		} else {
+			errorMessage = JSON.stringify(e)
+		}
 		return rejectWithValue({errors: [errorMessage], fieldsErrors: undefined})
 	}
-
 })
 
+export const logoutTC = createAsyncThunk('auth/logout',
+	async (arg, thunkAPI) => {
+		const {dispatch, rejectWithValue} = thunkAPI
+		dispatch(setRequestStatusAC({status: 'loading'}))
+		try {
+			const res = await authApi.logout()
+			if (res.data.resultCode === ResultCode.OK) {
+				dispatch(setRequestStatusAC({status: 'succeeded'}))
+					//dispatch(setIsLoggedInAC({isLoggedIn: false}))
+				//ничего не ретурним в случае успеха, а в кейсе extraReducers просто меняем стейт: state.isLoggedIn = true
+				return //можно даже явно не писать return, т.к. в случае успешной логинизации не сработает ветка else в блоке try и не отработает catch, в любом случае вернется undefined
+			} else {
+				handleServerAppError(dispatch, res.data)
+				return rejectWithValue({})
+			}
+		} catch (e) {
+			handleServerNetworkError(dispatch, e as any)
+			let errorMessage = ''
+			if (isAxiosError(e)) {
+				errorMessage = e?.response?.data?.error ?? e.message
+			} else if (e instanceof Error) {
+				errorMessage = e.message
+			} else {
+				errorMessage = JSON.stringify(e)
+			}
+			return rejectWithValue({errors: [errorMessage], fieldsErrors: undefined})
+		}
+	})
 
 const slice = createSlice({
 	name: 'auth',
@@ -53,10 +82,13 @@ const slice = createSlice({
 	},
 	extraReducers: builder => {
 		builder
-			.addCase(loginTC.fulfilled, (state, action)=>{
+			.addCase(loginTC.fulfilled, (state, action) => {
 				//if (action.payload){
-					state.isLoggedIn = action.payload.isLoggedIn
+				state.isLoggedIn = true
 				//}
+			})
+			.addCase(logoutTC.fulfilled, (state, action) => {
+				state.isLoggedIn = false
 			})
 	}
 })
@@ -69,24 +101,6 @@ export const authReducer = slice.reducer
 export const {setIsLoggedInAC} = slice.actions
 
 //thunkCreators:
-
-
-export const logoutTC = () => (dispatch: Dispatch<LoginReducerActionsType>) => {
-	//debugger
-	dispatch(setRequestStatusAC({status: 'loading'}))
-	authApi.logout()
-		.then((res) => {
-			if (res.data.resultCode === ResultCode.OK) {
-				//alert('success')
-				dispatch(setIsLoggedInAC({isLoggedIn: false}))
-				dispatch(setRequestStatusAC({status: 'succeeded'}))
-			} else {
-				handleServerAppError(dispatch, res.data)
-			}
-		}).catch((e) => {
-		handleServerNetworkError(dispatch, e)
-	})
-}
 
 
 //types:
