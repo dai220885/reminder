@@ -5,7 +5,7 @@ import {
 	TasksForTodoListType,
 	tasksReducer, updateTaskTC
 } from '../../features/TodoListsList/tasksReducer'
-import {addTodoListAC, removeTodoListAC, setTodoListsAC} from '../../features/TodoListsList/todoListsReducer';
+import {addTodoListTC, fetchTodoListsTC, removeTodoListTC} from '../../features/TodoListsList/todoListsReducer';
 
 
 let startState: TasksForTodoListType = {};
@@ -123,14 +123,16 @@ test('title of specified task should be changed', () => {
 
 
 test('new array should be added when new todolist is added', () => {
-	const action = addTodoListAC({
+
+	const dataForAdd = {
 		newTodoList: {
 			id: 'blabla',
 			title: 'new todolist',
 			order: 0,
 			addedDate: ''
 		}
-	});
+	};
+	const action = addTodoListTC.fulfilled(dataForAdd, 'requestId', {newTodoListTitle: dataForAdd.newTodoList.title});
 
 	const endState = tasksReducer(startState, action)
 
@@ -145,7 +147,7 @@ test('new array should be added when new todolist is added', () => {
 	expect(endState[newKey]).toEqual([]);
 });
 test('propertry with todolistId should be deleted', () => {
-	const action = removeTodoListAC({todoListForRemoveId: 'todolistId2'});
+	const action = removeTodoListTC.fulfilled({todoListForRemoveId: 'todolistId2'}, 'requestId', {todoListForRemoveId: 'todolistId2'});
 
 	const endState = tasksReducer(startState, action)
 
@@ -154,13 +156,18 @@ test('propertry with todolistId should be deleted', () => {
 	expect(keys.length).toBe(1);
 	expect(endState['todolistId2']).not.toBeDefined();
 });
+
+
+
+//чтобы получить action из санки (отдельно экшенкриэйтор мы уже не описываем), достаем его из свойства fulfilled, после чего в качестве параметров передаем объект, который сама санка возвращает при успешно запросе, далее какие-то args в виде пустой строки (или значения для requestId - нужно только для тестов, в приложении туда всё автоматом прилетает) и то, что сама санка получает в качестве параметра -
+//(task, 'requestId', {todoListId: 'todolistId2', title: task.title})
 test('empty arrays should be added when we set todolists', () => {
-	const action = setTodoListsAC({
+	const action = fetchTodoListsTC.fulfilled({
 		todoLists: [
 			{id: '1', title: 'title 1', order: 0, addedDate: ''},
 			{id: '2', title: 'title 2', order: 0, addedDate: ''}
 		]
-	})
+	}, 'requestId')
 
 	const endState = tasksReducer({}, action)
 

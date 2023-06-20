@@ -1,4 +1,4 @@
-import {addTodoListAC, TodoListType, todoListsReducer} from '../../features/TodoListsList/todoListsReducer'
+import {TodoListType, todoListsReducer, addTodoListTC} from '../../features/TodoListsList/todoListsReducer'
 import {tasksReducer, TasksForTodoListType} from '../../features/TodoListsList/tasksReducer'
 import {TodoListFromServerType} from '../../api/todoLists-api'
 
@@ -13,7 +13,7 @@ test('ids should be equals', () => {
         order: 0
     }
 
-    const action = addTodoListAC({newTodoList: todolist});
+    const action = addTodoListTC.fulfilled({newTodoList: todolist}, 'requestId', {newTodoListTitle: todolist.title});
 
     const endTasksState = tasksReducer(startTasksState, action)
     const endTodoListsState = todoListsReducer(startTodoListsState, action)
