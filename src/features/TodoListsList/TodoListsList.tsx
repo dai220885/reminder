@@ -8,7 +8,7 @@ import {AddItemInput} from '../../components/AddItemInput/AddItemInput'
 import {
     addTodoListTC, changeTodoListFilterAC,
     changeTodoListTitleTC, FilterValuesType,
-    getTodoListsTC,
+    fetchTodoListsTC,
     removeTodoListTC
 } from '../../features/TodoListsList/todoListsReducer';
 import {
@@ -39,22 +39,22 @@ export const TodoListsList: React.FC<TodoListsListPropsType> = ({demo = false}) 
             return
             //если включен "деморежим", то диспатчить не будем
         }
-        dispatch(getTodoListsTC())
+        dispatch(fetchTodoListsTC())
     }, [])
 
     // оборачиваем функции в хук useCallback, в качестве зависимости передаем dispatch, хотя можно было и пустой массив
     // если колбэк передается в компоненту, то необходимо оборачивать его в useCallback, если уходит просто в элемент (button и т.д.), то useCallback не нужен
     const addTodoList = useCallback((newTodoListTitle: string) => {
-        dispatch(addTodoListTC(newTodoListTitle))
+        dispatch(addTodoListTC({newTodoListTitle}))
         //достаточно отдать action в рутовый редьюсер, после чего action  попадет в оба редьюсера
     }, [dispatch])
 
     const changeTodoListTitle = useCallback((todoListForChangeId: string, newTitle: string) => {
-        dispatch(changeTodoListTitleTC(todoListForChangeId, newTitle))
+        dispatch(changeTodoListTitleTC({todoListForChangeId, newTitle}))
     }, [dispatch])
 
     const removeTodoList = useCallback((todoListForRemoveId: string) => {
-        dispatch(removeTodoListTC(todoListForRemoveId))
+        dispatch(removeTodoListTC({todoListForRemoveId}))
     }, [dispatch])
 
     const addTask = useCallback((todoListId: string, newTaskTitle: string) => {
