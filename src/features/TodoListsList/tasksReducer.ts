@@ -1,8 +1,13 @@
 import {
-	addTodoListAC,
-	AddTodoListActionType, removeTodoListAC,
-	RemoveTodoListActionType, setTodoListsAC,
-	setTodoListsActionType, TodoListType,
+	addTodoListTC,
+	//addTodoListAC,
+	//AddTodoListActionType,
+	fetchTodoListsTC, removeTodoListTC,
+	//removeTodoListAC,
+	//RemoveTodoListActionType,
+	//setTodoListsAC,
+	//setTodoListsActionType,
+	TodoListType,
 } from './todoListsReducer';
 import {
 	ResultCode,
@@ -96,26 +101,6 @@ export const addTaskTC = createAsyncThunk<TaskFromServerType, { todoListId: stri
 	}
 )
 
-//
-// export const _addTaskTC = (todoListId: string, title: string) => (dispatch: Dispatch) => {
-// 	dispatch(setRequestStatusAC({status: 'loading'}))
-// 	todoListsApi.createTask(todoListId, title)
-// 		.then((res) => {
-// 			if (res.data.resultCode === ResultCode.OK) {
-// 				const task = res.data.data.item
-// 				const action = addTaskAC({todoListId, task})//можно todoListId не передавать, т.к. он есть в свойствах у таски с сервера
-// 				dispatch(action)
-// 				dispatch(setRequestStatusAC({status: 'succeeded'}))
-// 				dispatch(setRequestStatusAC({status: 'idle'}))
-// 			} else {
-// 				handleServerAppError<{ item: TaskFromServerType }>(dispatch, res.data)
-// 			}
-// 		}).catch((e) => {
-// 		handleServerNetworkError(dispatch, e)
-// 	})
-// }
-
-
 //TODO пофиксить то, что убрали if else(убрали т.к. в addCase в экстраРедьюсере падала ошибка, что action.payload может быть undefined
 export const removeTaskTC = createAsyncThunk('tasks/removeTask', async (arg: { todoListId: string, taskForRemoveId: string }, thunkAPI) => {
 	const {dispatch, rejectWithValue} = thunkAPI
@@ -201,17 +186,18 @@ const slice = createSlice({
 	//extraReducers может быть как объект со свойствами (ключ-значение), а может быть функция, которая будет "собирать" экстра редьюсеры
 	extraReducers: (builder) => {
 		builder
-			.addCase(addTodoListAC, (state, action) => {
+			.addCase(addTodoListTC.fulfilled, (state, action) => {
 				state[action.payload.newTodoList.id] = []
 			})
-			.addCase(removeTodoListAC, (state, action) => {
+			.addCase(removeTodoListTC.fulfilled, (state, action) => {
 				delete state[action.payload.todoListForRemoveId]
 			})
-			.addCase(setTodoListsAC, (state, action) => {
+			.addCase(fetchTodoListsTC.fulfilled, (state, action) => {
 				action.payload.todoLists.forEach(t => {
 					state[t.id] = []
 				})
 			})
+			//вместо setTodoListsAC теперь используется fetchTasksTC.fulfilled
 			.addCase(fetchTasksTC.fulfilled, (state, action) => {
 				if (action.payload) {
 					state[action.payload.todoListId] = action.payload.tasks
@@ -334,9 +320,9 @@ export type TasksReducerActionsType =
 //| AddTaskActionType
 	//| ChangeTaskStatusActionType
 	//| ChangeTaskTitleActionType
-	| AddTodoListActionType
-	| RemoveTodoListActionType
-	| setTodoListsActionType
+	//| AddTodoListActionType
+	//| RemoveTodoListActionType
+	//| setTodoListsActionType
 	//| SetTasksActionType
 	| SetRequestStatusType
 	| SetRequestErrorType
