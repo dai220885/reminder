@@ -31,7 +31,7 @@ export const Task = React.memo((props: TaskComponentPropsType) => {
     },[props.changeTaskTitle, props.todoListId, props.task.id])
 
     return (
-        <div key={props.task.id}>{/*key нужен для того, чтобы при изменении списка (перерендеринг) React понимал, какой элемент из списка добавился, а какой уже был ранее*/}
+        <div key={props.task.id} style={{position: 'relative', marginBottom: '5px', paddingRight: '34px'}}>{/*key нужен для того, чтобы при изменении списка (перерендеринг) React понимал, какой элемент из списка добавился, а какой уже был ранее*/}
             {/*старый вариант с инпутом:*/}
             {/*<input*/}
             {/*    type="checkbox"*/}
@@ -42,6 +42,7 @@ export const Task = React.memo((props: TaskComponentPropsType) => {
                 //checked={props.task.isDone}
                 checked={props.task.status === TaskStatuses.Completed}
                 onChange={changeTaskStatusHandler}
+                style = {{position: 'absolute', top: '-8px', left: '-45px'}}
             />
             {/*добавим спану классНейм, который будет состоять из task  и (в случае отмеченной галочки) task-done*/}
             {/*<span className={`task ${task.isDone? "task-done": ''}`}>{task.title}</span>*/}
@@ -55,7 +56,7 @@ export const Task = React.memo((props: TaskComponentPropsType) => {
             />
             {/*<button onClick={removeTaskHandler}>x</button>*/}
             {/*кнопка из material.ui:*/}
-            <IconButton aria-label="delete" onClick={removeTaskHandler}>
+            <IconButton aria-label="delete" onClick={removeTaskHandler} style = {{position: 'absolute', top: '-8px', right: '3px'}}>
                 <Delete/>
             </IconButton>
         </div>
