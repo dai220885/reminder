@@ -45,7 +45,7 @@ export const EditableSpan = React.memo((props: EditableSpanPropsType) => {
                 variant="standard"
             />
             :
-            <span className={props.className || ''} onDoubleClick={activateEditMode} style={props.style}>
+            <span className={props.className || ''} onDoubleClick={activateEditMode} style={{...props.style, overflowWrap: 'break-word'}}>
                 {/*при использовании @mui/material для изменения стилей используется не className и стили в css файле, а атрибут style в теге */}
                 {props.title}
             </span>
