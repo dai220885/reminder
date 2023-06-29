@@ -14,6 +14,8 @@ import {Navigate} from 'react-router-dom';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 
 
+
+//free-аккаунт (Email: free@samuraijs.com Password: free)
 type FormValuesType = {
     email: string,
     password: string,
@@ -93,7 +95,7 @@ export const Login = () => {
                             // а можно деструктуризировать и забрать пропсы для определенного поля(филда), в нашем случае для 'email':
                                    {...formik.getFieldProps('email')}/>
                         {/*при наличии ошибки в имэйле, отображаем ее под полем имейл:*/}
-                        {formik.errors.email ? <div>{formik.errors.email}</div> : null}
+                        {formik.errors.email ? <div style={{color: 'red'}}>{formik.errors.email}</div> : null}
                         <TextField type="password"
                                    label="Password"
                                    margin="normal"
