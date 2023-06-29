@@ -87,6 +87,7 @@ export const AddItemInput = React.memo (({disabled = false, ...props}: AddItemIn
                 onClick={addItem}
                 //variant={'contained'}
                 color={'primary'}
+                style = {{margin: '6px 0px 0px 3px' }}
             >
                 <ControlPointOutlined />
             </IconButton> {/*кнопка из material.ui*/}
