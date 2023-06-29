@@ -75,19 +75,20 @@ const TodoList = React.memo(({demo = false, ...props}: TodoListPropsType) => {
     }
 
     return (
-        <div className={'todolist'} >
+        <div className={'todolist'} style={{position: 'relative'}}>
+            <IconButton aria-label="delete"
+                        onClick={removeTodoListHandler}
+                        disabled={props.todoList.entityStatus === 'loading'}
+                        style={{position: 'absolute', right: '-10px', top: '-30px'}}>
+                <Delete/>
+            </IconButton>
+
             <h3>
                 <EditableSpan
                     title={props.todoList.title}
                     onChange={changeTodoListTitleHandler}
                 />
-                {/*<button onClick={removeTodoListHandler}>del</button>*/}
-                {/*кнопка из material.ui:*/}
-                <IconButton aria-label="delete"
-                            onClick={removeTodoListHandler}
-                            disabled={props.todoList.entityStatus === 'loading'}>
-                    <Delete/>
-                </IconButton>
+
             </h3>
             <AddItemInput
                 addItem={addTask}
