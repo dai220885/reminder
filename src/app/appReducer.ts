@@ -26,9 +26,12 @@ const initialState = {
 	isInitialized: false,
 }
 
+
+
 const slice = createSlice({
 		name: 'app',
 		initialState,
+	//TODO: пофиксить циклическую зависимость с authReducer!!! в видео Todolist for students 20- Final Refactoring 4:55:43  экшенкриэейтеры (здесь reducers) выносятся в отдельный файлик и эеспортируются уже из него, а не из этого редьюсера, чтобы не было циклических зависимостей с authReducer. здесь же эти экшенкриэйтеры также экспортируются и обрабатываются в extraReducers через .addCase
 		reducers: {
 			setRequestStatusAC: (state, action: PayloadAction<{ status: RequestStatusType }>) => {
 				state.status = action.payload.status
