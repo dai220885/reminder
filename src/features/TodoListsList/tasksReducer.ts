@@ -10,6 +10,7 @@ import {
 	TodoListType,
 } from './todoListsReducer';
 import {
+	FieldErrorType,
 	ResultCode,
 	TaskFromServerType,
 	TaskPriorities,
@@ -38,11 +39,11 @@ const initialState: TasksForTodoListType = {
 //TODO убрать из санок приписку TC
 
 //если санка принимала несколько параметров, то их нужно оборачивать в объект, если же нужен только один параметр, то можно без оборачвания
-
 //thunks
-export const fetchTasksTC = createAsyncThunk(
+//Для уточнения типа createAsyncThunk в дженерике указываем: что санка возвращает, что санка принимает, что получается при ошибке
+export const fetchTasksTC = createAsyncThunk<{todoListId: string,	tasks: TaskFromServerType[]}, string> (
 	'tasks/fetchTasks',
-	async (todoListId: string, thunkAPI) => {
+	async (todoListId, thunkAPI) => {
 		const {dispatch, rejectWithValue} = thunkAPI
 		dispatch(setRequestStatusAC({status: 'loading'}))
 		try {
@@ -67,10 +68,10 @@ export const fetchTasksTC = createAsyncThunk(
 	}
 )
 
-//Для уточнения типа createAsyncThunk в дженерике указываем: что санка возвращает, что санка принимает, что получается, при ошибке
+//Для уточнения типа createAsyncThunk в дженерике указываем: что санка возвращает, что санка принимает, что получается при ошибке
 export const addTaskTC = createAsyncThunk<TaskFromServerType, { todoListId: string, title: string }>(
 	'tasks/addTask',
-	async (arg: { todoListId: string, title: string }, thunkAPI) => {
+	async (arg, thunkAPI) => {
 		const {dispatch, rejectWithValue} = thunkAPI
 		dispatch(setRequestStatusAC({status: 'loading'}))
 		try {
@@ -102,7 +103,7 @@ export const addTaskTC = createAsyncThunk<TaskFromServerType, { todoListId: stri
 )
 
 //TODO пофиксить то, что убрали if else(убрали т.к. в addCase в экстраРедьюсере падала ошибка, что action.payload может быть undefined
-export const removeTaskTC = createAsyncThunk('tasks/removeTask', async (arg: { todoListId: string, taskForRemoveId: string }, thunkAPI) => {
+export const removeTaskTC = createAsyncThunk<{ todoListId: string, taskForRemoveId: string }, { todoListId: string, taskForRemoveId: string }>('tasks/removeTask', async (arg, thunkAPI) => {
 	const {dispatch, rejectWithValue} = thunkAPI
 	dispatch(setRequestStatusAC({status: 'loading'}))
 	const res = await todoListsApi.deleteTask(arg.todoListId, arg.taskForRemoveId)
