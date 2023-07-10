@@ -1,18 +1,7 @@
-import {v1} from 'uuid';
 import {ResultCode, TodoListFromServerType, todoListsApi} from '../../api/todoLists-api';
-import {Dispatch} from 'redux';
-import {ThunkAction} from 'redux-thunk';
-import {
-	AppReducerActionsType,
-	RequestStatusType,
-	setRequestErrorAC,
-	SetRequestErrorType,
-	setRequestStatusAC,
-	SetRequestStatusType
-} from '../../app/appReducer';
+import {RequestStatusType, SetRequestErrorType, setRequestStatusAC, SetRequestStatusType} from '../../app/appReducer';
 import {handleServerAppError, handleServerNetworkError} from '../../utils/error-utils';
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {AppThunk} from '../../app/store';
 import {isAxiosError} from 'axios';
 
 
@@ -44,7 +33,7 @@ export const fetchTodoListsTC = createAsyncThunk<{todoLists: TodoListFromServerT
 
 export const addTodoListTC = createAsyncThunk<{newTodoList: TodoListFromServerType}, {newTodoListTitle: string}>(
 	'todoLists/addTodoList',
-	async (arg: {newTodoListTitle: string}, thunkAPI) => {
+	async (arg, thunkAPI) => {
 		const {dispatch, rejectWithValue} = thunkAPI
 		dispatch(setRequestStatusAC({status: 'loading'}))
 		try {
@@ -74,7 +63,7 @@ export const addTodoListTC = createAsyncThunk<{newTodoList: TodoListFromServerTy
 
 export const removeTodoListTC = createAsyncThunk<{todoListForRemoveId: string } , {todoListForRemoveId: string}>(
 	'todoLists/removeTodoList',
-	async (arg: {todoListForRemoveId: string}, thunkAPI) => {
+	async (arg, thunkAPI) => {
 		const {dispatch, rejectWithValue} = thunkAPI
 		dispatch(setRequestStatusAC({status: 'loading'}))
 		//изменяет статус конкретного тудулиста, чтобы в нем можно было что-то дизейблить
@@ -106,7 +95,7 @@ export const removeTodoListTC = createAsyncThunk<{todoListForRemoveId: string } 
 
 export const changeTodoListTitleTC = createAsyncThunk<{todoListForChangeId: string, newTitle: string}, {todoListForChangeId: string, newTitle: string}>(
 	'todoLists/changeTodoListTitle',
-	async (arg: {todoListForChangeId: string, newTitle: string}, thunkAPI) => {
+	async (arg, thunkAPI) => {
 		const {dispatch, rejectWithValue} = thunkAPI
 		dispatch(setRequestStatusAC({status: 'loading'}))
 		dispatch(setEntityStatusAC({todoListForChangeId: arg.todoListForChangeId, entityStatus: 'loading'}))
