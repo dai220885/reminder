@@ -39,6 +39,25 @@ export const theme = createTheme({
 	},
 });
 
+
+//просто палитра для экспериментов:
+export const theme2 = createTheme({
+	palette: {
+		primary: {
+			light: '#7c7979',
+			main: '#605e5e',
+			dark: '#413d3d',
+			contrastText: '#fff',
+		},
+		secondary: {
+			light: '#90a4ae',
+			main: '#607d8b',
+			dark: '#455a64',
+			contrastText: '#000',
+		},
+	},
+});
+
 type PropsType = {
 	demo?: boolean// нужно только для сторибука, чтобы устанавливать "демо режим", а не запрашивать тудулисты с сервера.
 }
@@ -78,8 +97,8 @@ const AppWithRedux: React.FC<PropsType> = ({demo = false}) => {
 		//   <BrowserRouter basename={'/reminder'}>
 		//<BrowserRouter basename={'/reminder-rtk'}>
 		<div className="App" style={{backgroundColor: '#90a4ae'}}>
-			<ThemeProvider theme={theme}>
-				<AppBar position="static">
+			<ThemeProvider theme={theme2}>
+				<AppBar position="fixed">
 					<Toolbar>
 						<IconButton
 							//*size="large"
