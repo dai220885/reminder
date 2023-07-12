@@ -39,7 +39,6 @@ export const theme = createTheme({
 	},
 });
 
-
 //просто палитра для экспериментов:
 export const theme2 = createTheme({
 	palette: {
