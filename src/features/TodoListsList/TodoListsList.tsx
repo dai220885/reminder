@@ -83,7 +83,7 @@ export const TodoListsList: React.FC<TodoListsListPropsType> = ({demo = false}) 
 	return (
 		<>
 			<Grid container style={{padding: '76px 0px 10px 0px'}}>
-				<AddItemInput addItem={addTodoList} placeholder={'Enter new todolist title'}/>
+				<AddItemInput addItem={addTodoList} placeholder={'Enter new todolist title'} buttonHoverText={'add todolist'}/>
 			</Grid>
 			{/*если нужно выстроить тудулисты горизонтально со скроллом:*/}
 			{/*<Grid container spacing={5} style={{flexWrap: 'nowrap', overflowX: 'scroll'}}>*/}
