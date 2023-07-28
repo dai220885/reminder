@@ -109,7 +109,7 @@ const AppWithRedux: React.FC<PropsType> = ({demo = false}) => {
 							<Menu/>
 						</IconButton>
 						<Typography variant="h6" component="div" sx={{flexGrow: 1}}>
-							News
+							{/*News*/}
 						</Typography>
 						{isLoggedIn && <Button color="inherit" onClick={logoutHandler}>Logout</Button>}
 					</Toolbar>
