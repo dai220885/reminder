@@ -2,9 +2,7 @@ import React, {useCallback, useEffect} from 'react';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Delete from '@mui/icons-material/Delete';
-
-
-
+import Tooltip from '@mui/material/Tooltip';
 import {fetchTasksTC} from '../tasksReducer';
 import {FilterValuesType, TodoListType} from '../../../features/TodoListsList/todoListsReducer';
 import {TaskFromServerType, TaskStatuses} from '../../../api/todoLists-api';
@@ -76,12 +74,14 @@ const TodoList = React.memo(({demo = false, ...props}: TodoListPropsType) => {
 
     return (
         <div className={'todolist'} style={{position: 'relative'}}>
+            <Tooltip title={'delete todolist'} placement="right-start">
             <IconButton aria-label="delete"
                         onClick={removeTodoListHandler}
                         disabled={props.todoList.entityStatus === 'loading'}
                         style={{position: 'absolute', right: '-10px', top: '-30px'}}>
                 <Delete/>
             </IconButton>
+            </Tooltip>
 
             <h3>
                 <EditableSpan
@@ -94,6 +94,7 @@ const TodoList = React.memo(({demo = false, ...props}: TodoListPropsType) => {
                 addItem={addTask}
                 placeholder={'Enter new task title'}
                 disabled={props.todoList.entityStatus === 'loading'}
+                buttonHoverText={'add task'}
             />
             <TaskList
                 todoListId={props.todoList.id}
