@@ -1,5 +1,6 @@
 import React, {ChangeEvent, KeyboardEvent, useCallback, useState} from 'react';
 import TextField from '@mui/material/TextField';
+import Tooltip from '@mui/material/Tooltip';
 
 export type EditableSpanPropsType = {
     title: string
@@ -45,9 +46,11 @@ export const EditableSpan = React.memo((props: EditableSpanPropsType) => {
                 variant="standard"
             />
             :
+          <Tooltip title={'double click to edit'} placement="top-end">
             <span className={props.className || ''} onDoubleClick={activateEditMode} style={{...props.style, overflowWrap: 'break-word'}}>
                 {/*при использовании @mui/material для изменения стилей используется не className и стили в css файле, а атрибут style в теге */}
                 {props.title}
             </span>
+          </Tooltip>
     )
 })
